@@ -4,7 +4,7 @@ import random
 import time
 from PIL import Image, ImageTk
 
-#二維迷宮  -1為起點 0為路 1為障礙 2為終點 
+#二維陣列迷宮  -1為起點 0為路 1為障礙 2為終點 
 maze = np.array([
   [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
   [1, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -20,7 +20,7 @@ maze = np.array([
   [1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ])
-#繪製迷宮遊戲
+#迷宮遊戲
 class MazeWindow:
     def __init__(self, maze):
         self.root = tk.Tk()
@@ -28,14 +28,14 @@ class MazeWindow:
         self.maze = maze
         self.labels = np.zeros(self.maze.shape).tolist()
         self.plotBackground()
-
+    #繪製迷宮
     def plotBackground(self):
         for i, row in enumerate(self.maze.tolist()):
             for j, element in enumerate(row):
                 bg = 'black' if element == 1 else 'red' if element == 2 else 'blue' if element == -1 else 'white'
                 self.labels[i][j] = tk.Label(self.root, foreground='blue', background=bg, width=2, height=1, relief='ridge', font='? 10 bold')
                 self.labels[i][j].grid(row=i, column=j)
-    #
+    #延遲
     def mainloop(self, func):
         self.root.after(1000, func)
         self.root.mainloop()
@@ -55,19 +55,20 @@ class Agent:
         self.initQTable()
         self.actionList = ['up', 'down', 'left', 'right']
         self.actionDict = {element : index for index, element in enumerate(self.actionList)}
-        #定義Q Table
+
+        #初始化Q Table
     def initQTable(self):
         Q = np.zeros(self.maze.shape).tolist()
         for i, row in enumerate(Q):
             for j, _ in enumerate(row):
                 Q[i][j] = [0, 0, 0, 0] #上,下,左,右
         self.QTable = np.array(Q, dtype='f')
-    
+    #打印QTable
     def showQTable(self):
         for i, row in enumerate(self.QTable):
             for j, element in enumerate(row):
                 print(f'({i}, {j}){element}')
-
+    
     def showBestAction(self):
         for i, row in enumerate(self.QTable):
             for j, element in enumerate(row):
@@ -82,10 +83,10 @@ class Agent:
         else:
             Qsa = self.QTable[self.state].tolist()
             return self.actionList[Qsa.index(max(Qsa))]
-
+     
     def getNextMaxQ(self, state):
         return max(np.array(self.QTable[state]))
-
+    #更新Q Table
     def updateQTable(self, action, nextState, reward, lr=0.7, gamma=0.9):
         Qs = self.QTable[self.state]
         Qsa = Qs[self.actionDict[action]]
@@ -142,6 +143,7 @@ def main():
     agent = Agent(maze, initState)
     #創建遊戲環境
     environment = Environment()
+    #進行1000局
     for j in range(0, 1000):
         agent.state = initState
         m.target(agent.state)
