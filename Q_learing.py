@@ -76,7 +76,7 @@ class Agent:
                 action = self.actionList[Qa.index(max(Qa))] if max(Qa) != 0 else '??'
                 print(f'({i}, {j}){action}', end=" ")
             print()
-# eGreddy = 貪婪值 讓代理人能夠去探索其他策略，防止陷入某個循環
+# eGreddy = 貪婪值 防治代理人只會循環某個策略，讓能夠去探索其他策略，防止陷入某個循環
     def getAction(self, eGreddy=0.8):
         if random.random() > eGreddy:
             return random.choice(self.actionList)
