@@ -20,7 +20,7 @@ maze = np.array([
   [1, 0, 0, 0, 0, 0, 0, 2, 1, 0, 1, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ])
-#迷宮遊戲
+#迷宮遊戲類
 class MazeWindow:
     def __init__(self, maze):
         self.root = tk.Tk()
@@ -35,19 +35,19 @@ class MazeWindow:
                 bg = 'black' if element == 1 else 'red' if element == 2 else 'blue' if element == -1 else 'white'
                 self.labels[i][j] = tk.Label(self.root, foreground='blue', background=bg, width=2, height=1, relief='ridge', font='? 10 bold')
                 self.labels[i][j].grid(row=i, column=j)
-    #延遲
+    #遊戲開始前延遲
     def mainloop(self, func):
         self.root.after(1000, func)
         self.root.mainloop()
         
-    #玩家
+    #繪製玩家
     def target(self, indexes):
         for label in [item for row in self.labels for item in row]:
             label.config(text='')
         self.labels[indexes[0]][indexes[1]].config(text = 'Q')
 
         self.root.update()
-#代理人
+#代理人類
 class Agent:
     def __init__(self, maze, initState):
         self.state = initState
@@ -76,7 +76,7 @@ class Agent:
                 action = self.actionList[Qa.index(max(Qa))] if max(Qa) != 0 else '??'
                 print(f'({i}, {j}){action}', end=" ")
             print()
-
+# eGreddy = 貪婪值 讓代理人能夠去探索其他策略，防止陷入某個循環
     def getAction(self, eGreddy=0.8):
         if random.random() > eGreddy:
             return random.choice(self.actionList)
