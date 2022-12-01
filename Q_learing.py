@@ -151,7 +151,7 @@ def main():
             i += 1
             # 代理人執行下一步
             action = agent.getAction(0.9)
-            # Give the action to the Environment to execute
+           
             reward, nextState, result = environment.doAction(agent.state, action)
             # 更新Q Table
             agent.updateQTable(action, nextState, reward)
